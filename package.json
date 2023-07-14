@@ -1,0 +1,27 @@
+{
+  "name": "jode",
+  "version": "0.0.1",
+  "description": "A system to organise projects",
+  "scripts": {
+    "commit": "git-cz",
+    "jode:system": "node cmd/system.js"
+  },
+  "type": "module",
+  "author": "Aleksei Kosianov <aleksei.kosianov.software.dev@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "minimist": "^1.2.8",
+    "yup": "^1.2.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
+    "commitizen": "^4.3.0",
+    "husky": "^8.0.3"
+  }
+}
