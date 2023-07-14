@@ -10,7 +10,7 @@ const Utils  = Internal.Utils;
 
 export class System extends Entity {
 
-  storeContainer = Constants.PATH_DATA;
+  container = Constants.PATH_DATA;
 
   get identity() {
     const { name, capacity } = this;
@@ -27,8 +27,8 @@ export class System extends Entity {
     return `${this.id}.json`;
   }
 
-  get storePath() {
-    return Path.join(this.storeContainer, this.filename);   
+  get systemPath() {
+    return Path.join(this.container, this.filename);   
   }
 
   constructor(name, capacity = Constants.ENTITY_SYSTEM_CAPACITY) {
@@ -39,51 +39,39 @@ export class System extends Entity {
   }
 
   async tap() {
-    const identity = await this.readStore();
+    const identity = await this.read();
       
     this.name     = identity.name;
     this.capacity = identity.capacity;
   }
 
-  async readStore() {
-    Utils.throwIf(!await this.storeIsExists(), `System ${this.name} has not a store`);
-    return Json.parse(await AFs.readFile(this.storePath));
+  async read() {
+    Utils.throwIf(!await this.isExists(), `System ${this.name} is not exists`);
+    return Json.parse(await AFs.readFile(this.systemPath));
   }
 
-  async writeStore() {
-    Utils.throwIf(await this.storeIsExists(), `System ${this.name} has a store already`);
-    AFs.writeFile(this.storePath, this.identity.stringify());  
+  async write() {
+    Utils.throwIf(await this.isExists(), `System ${this.name} is exists already`);
+    AFs.writeFile(this.systemPath, this.identity.stringify());  
   }
 
-  async updateStore() {}
+  async update() {}
+
+  async prune() {
+    if (await this.isExists()) {
+      AFs.unlink(this.systemPath);
+    }
+  }
 
   async isExists() {
-    return AFs.existsPath(this.storePath);
+    return AFs.existsPath(this.systemPath);
   }
 
   async createIfNotExists() {
     if (!await this.isExists()) {
-      this.createStoreIfNotExists();  
+      this.write();  
     }
   }
 
-  async storeIsExists() {
-    return AFs.existsPath(this.storePath);
-  }
-
-  async createStoreIfNotExists() {
-    if (!await this.storeIsExists()) {
-      this.writeStore();  
-    }
-  }
-
-  async prune() {
-    this.pruneStore();
-  }
-
-  async pruneStore() {
-    if (await this.storeIsExists()) {
-      AFs.unlink(this.storePath);
-    }
-  }
+  
 }
