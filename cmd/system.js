@@ -44,7 +44,7 @@ async function main(input = InputCLi.parse()) {
       break; 
     case Constants.CMD_SYSTEM_INPUT_MOD.PRUNE:
       system.prune();  
-      
+
       break;   
     default: 
       break;
